@@ -1,0 +1,236 @@
+# Code inspired byhttps://www.pythonguis.com/pyside6-tutorial/ 
+
+import sys
+
+#from PySide6.QtWidgets import QApplication, QHBoxLayout, QLabel, QMainWindow, QVBoxLayout, QWidget
+from PySide6.QtCore import QEventLoop, QSize, QTimer, Qt
+from PySide6.QtGui import QIcon, QPixmap, QAction
+
+from PySide6.QtWidgets import (
+    QApplication,
+    QCheckBox,
+    QComboBox,
+    QDateEdit,
+    QDateTimeEdit,
+    QDial,
+    QDoubleSpinBox,
+    QFileSystemModel,
+    QFontComboBox,
+    QLabel,
+    QLCDNumber,
+    QLineEdit,
+    QMainWindow,
+    QProgressBar,
+    QPushButton,
+    QRadioButton,
+    QSlider,
+    QSpinBox,
+    QTimeEdit,
+    QVBoxLayout,
+    QHBoxLayout,
+    QWidget,
+)
+from pathlib import Path
+
+from layout_colorwidget import Color
+
+class ImProcessingWindow(QWidget): # create a new class for the image processing options window
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("Image Processing Options")
+
+        layout = QVBoxLayout()
+
+        self.exampleOption = QCheckBox("Example Option") # create a checkbox that will show/hide the slider and spinbox when toggled
+
+        self.exampleSlider = QSlider(Qt.Horizontal) # create a horizontal slider, which has example values from -10.0 to 10.0 with a 
+        # step of 0.01, but since QSlider only accepts integers, we will multiply the values by 100 to achieve the desired range and step
+        self.exampleSlider.setRange(-1000, 1000)
+        self.exampleSlider.setSingleStep(1)
+        self.exampleSlider.setValue(0)
+        self.exampleSlider.hide()
+
+        self.exampleInput = QDoubleSpinBox() # create a double spin box that will show/hide with the slider, and will have the same range 
+        # and step as the slider, but will display the values as they are (divided by 100)
+        self.exampleInput.setRange(-10.0, 10.0)
+        self.exampleInput.setDecimals(2)
+        self.exampleInput.setSingleStep(0.01)
+        self.exampleInput.setValue(0.0)
+        self.exampleInput.hide()
+
+        self.exampleOption.toggled.connect(self.exampleSlider.setVisible) # toggles the visibility of the slider and spinbox when the checkbox is toggled
+        self.exampleOption.toggled.connect(self.exampleInput.setVisible)
+        self.exampleSlider.valueChanged.connect(self.slider_value) # connect the valueChanged signal of the slider to the slider_value method, which will update the value of the spinbox when the slider is moved
+        self.exampleInput.valueChanged.connect(self.spinbox_value_changed) # connect the valueChanged signal of the spinbox to the spinbox_value_changed method, which will update the value of the slider when the spinbox is changed
+        self.exampleSlider.sliderReleased.connect(self.slider_released) # debugging: print the value of the slider when it is released to verify that the value is being updated correctly
+
+        layout.addWidget(self.exampleOption) # organizes the widgets in the window using a vertical layout
+        layout.addWidget(self.exampleInput)
+        layout.addWidget(self.exampleSlider)
+        
+        self.setLayout(layout) # set the layout of the window to the vertical layout we created
+
+    def slider_value(self, value):
+        self.exampleInput.blockSignals(True) # block the signals of the spinbox to prevent it from triggering the spinbox_value_changed method when we update its value
+        self.exampleInput.setValue(value / 100.0) # update the value of the spinbox based on the value of the slider, dividing by 100 to get the correct range and step
+        self.exampleInput.blockSignals(False) # unblock the signals of the spinbox after updating its value
+
+    def slider_released(self):
+        print(f"Slider value changed: {self.exampleSlider.value() / 100.0}") # debugging: print the value of the slider when it is released to verify that the value is being updated correctly
+
+    def spinbox_value_changed(self, value):
+        self.exampleSlider.blockSignals(True) # block the signals of the slider to prevent it from triggering the slider_value method when we update its value
+        self.exampleSlider.setValue(int(value * 100)) # update the value of the slider based on the value of the spinbox, multiplying by 100 to get the correct range and step
+        self.exampleSlider.blockSignals(False) # unblock the signals of the slider after updating its value
+        print(f"Spinbox value changed: {value}") # debugging: print the value of the spinbox when it is changed to verify that the value is being updated correctly
+
+
+
+class MainWindow(QMainWindow):
+    def __init__(self):
+        # Initial setup:
+        super().__init__()
+
+        self.setWindowTitle("My App")
+        self.w = ImProcessingWindow() # create an instance of the ImProcessingWindow class to be used as a separate window 
+
+        layout1 = QHBoxLayout() # create a horizontal layout
+        layout2 = QVBoxLayout() # create a vertical layout
+        layout3 = QVBoxLayout() # create a vertical layout
+
+        layout1.setContentsMargins(0,0,0,0) # set the margins of the layout to 0
+        layout1.setSpacing(20) # set the spacing between the widgets in the layout to 20
+
+        # Toolbar and menu bar setup:
+        toolbar = self.addToolBar("My Toolbar") # create a toolbar and add it to the main window
+        toolbar.setMovable(False) # make the toolbar immovable
+        toolbar.setIconSize(QSize(16, 16)) # set the icon size of the toolbar
+        self.addToolBar(toolbar) # add the toolbar to the main window
+
+        imgProcess_button = QAction(QIcon("bug.png"), "&Image Processing Settings", self) # create an action for the toolbar with an icon and text
+        imgProcess_button.setStatusTip("This is your button") # set the status tip of the action
+        imgProcess_button.triggered.connect(self.toolbar_button_clicked) # connect the triggered signal of the action to the toolbar_button_clicked method
+        imgProcess_button.setCheckable(True) # make the action checkable
+        toolbar.addAction(imgProcess_button) # add the action to the toolbar
+        toolbar.addSeparator() # add a separator to the toolbar
+
+        bug_button2 = QAction(QIcon("bug.png"), "&Your button 2", self) # create another action for the toolbar with an icon and text
+        bug_button2.setStatusTip("This is your button 2") # set the status
+        # bug_button2.triggered.connect(self.toolbar_button_clicked) # connect the triggered signal of the action to the toolbar_button_clicked method
+        bug_button2.setCheckable(True) # make the action checkable
+        toolbar.addAction(bug_button2) # add the action to the toolbar
+
+        menu = self.menuBar() # create a menu bar and add it to the main window
+        file_menu = menu.addMenu("&File") # create a "File" menu and add it to the menu bar
+        file_menu.addAction(imgProcess_button) # add the first action to the "File"
+        file_menu.addSeparator() # add a separator to the "File" menu
+        file_submenu = file_menu.addMenu("Submenu") # create a submenu and add it to the "File" menu
+        file_submenu.addAction(bug_button2) # add the second action to the submenu
+
+        # What the GUI displays: 
+        # Creating a ComboBox (drop down menu) to display the file names of the images in the "kvasir-ulcerative-colitis" directory
+        self.combo = QComboBox()
+
+        # defining the path to the image files and adding the file names to the combo box
+        self.image_files = sorted(Path("kvasir-ulcerative-colitis").glob("*.jpg"))
+        for file in self.image_files:
+            self.combo.addItem(file.stem)
+        self.pixmap_cache = {}
+
+        layout2.addWidget(self.combo) # add the combo box to the vertical layout
+       
+        nextButton = QPushButton("Next Image")
+        nextButton.setFixedSize(QSize(200, 100)) 
+        backButton = QPushButton("Previous Image")
+        backButton.setFixedSize(QSize(200, 100))
+       
+        layout2.addWidget(nextButton) # add the button to the vertical layout
+        layout2.addWidget(backButton) # add the button to the vertical layout
+
+        autoButton = QPushButton("Automatically  Advance Image")
+        autoButton.setFixedSize(QSize(200, 100)) 
+        autoButton.setCheckable(True) # make the button checkable
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.next_image)
+        self.timer.setInterval(2000)  # 2 second interval for automatic image advancement
+        layout2.addWidget(autoButton) # add the button to the vertical layout
+
+        layout1.addLayout( layout2 )
+
+        self.exampleImage = QLabel()
+        self.exampleImage.setAlignment(Qt.AlignCenter)
+        self.exampleImage.setScaledContents(False)
+
+        layout1.addWidget(self.exampleImage) # we can add stretch to the image.. but that would eliminate the colors to the right
+
+        layout3.addWidget(Color('red'))
+        layout3.addWidget(Color('yellow'))
+        layout1.addLayout( layout3 )
+
+        widget = QWidget()
+        widget.setLayout(layout1)
+        self.setCentralWidget(widget)
+
+        # loading first image
+        if self.image_files:
+            self.combo.setCurrentIndex(0)
+            self.update_image(0)
+
+        self.combo.currentIndexChanged.connect(self.update_image) # connect the currentIndexChanged signal of the combo box to the update_image method
+        nextButton.clicked.connect(self.next_image) # connect the clicked signal of the button to the next_image method
+        backButton.clicked.connect(self.previous_image) # connect the clicked signal of the button to the previous_image method
+        autoButton.toggled.connect(self.toggle_auto_advance) # connect the toggled signal of the button to the toggle_auto_advance method
+    
+    
+    def toolbar_button_clicked(self, checked): # temporary. To be replaced with image processing options and such
+        print("Toolbar button clicked! Checked:", checked)
+
+        if self.w.isVisible():
+            self.w.hide()
+        else:
+            self.w.show()
+    
+    def toggle_auto_advance(self, checked):
+        if checked:
+            self.timer.start()
+        else:
+            self.timer.stop()
+
+    def next_image(self): # method to go to the next image in the combo box
+        current_index = self.combo.currentIndex()
+        next_index = (current_index + 1) % self.combo.count() # calculate the next index, wrapping around to the beginning if necessary
+        self.combo.setCurrentIndex(next_index) # set the combo box to the next index, which will trigger the update_image method
+        self.refresh_image() # refresh the image displayed in the QLabel
+
+    def previous_image(self): # method to go to the previous image in the combo box
+        current_index = self.combo.currentIndex()
+        previous_index = (current_index - 1) % self.combo.count() # calculate the previous index, wrapping around to the end if necessary
+        self.combo.setCurrentIndex(previous_index) # set the combo box to the previous index, which will trigger the update_image method
+        self.refresh_image() # refresh the image displayed in the QLabel
+
+    def update_image(self, index): # update the image displayed in the QLabel based on the selected index of the combo box
+        path = self.image_files[index]
+        if path not in self.pixmap_cache:
+            self.pixmap_cache[path] = QPixmap(str(path))
+
+        self.exampleImage.setPixmap(self.pixmap_cache[path].scaled(self.exampleImage.size(), Qt.KeepAspectRatio, Qt.SmoothTransformation))
+
+    def refresh_image(self): # refresh the image displayed in the QLabel
+        if self.image_files:
+            self.update_image(self.combo.currentIndex())
+    
+    def resizeEvent(self, event): # resize the image when the window is resized
+        super().resizeEvent(event)
+        self.refresh_image()
+
+
+app = QApplication(sys.argv) # create the application
+window = MainWindow() # create an instance of the MainWindow class
+
+screen_geometry = QApplication.primaryScreen().availableGeometry() # get the available geometry of the primary screen
+window.resize(screen_geometry.width(), screen_geometry.height())
+
+window.show() # show the window on the screen
+app.exec() # start the event loop of the application
+

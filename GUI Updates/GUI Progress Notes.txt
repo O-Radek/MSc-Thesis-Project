@@ -1,0 +1,25 @@
+Screenshot 2026-06-02 123043: Displays image at image's full size, barely leaving room for the colors on the left and right. Image does not resize. 
+
+Screenshot 2026-06-02 131230: Displays image at 200x200 pixels. Colors on left and right modify their sizes as the window changes size. Image stuck at center left of window. 
+
+Screenshot 2026-06-02 131734: Update from previous - Image is in the complete center. 
+
+Screenshot 2026-06-02 145539: Image is centered and sized as the automatic window size for initialization. As the window changes size, the colors on the left and right change. Image does not automatically resize. 
+
+Screenshot 2026-06-02 155023: Dropdown menu for selecting images.. dropdown doesn't properly switch between images yet.
+
+Screenshot 2026-06-03 124548: Dropdown menu works. But you have to resize the window to update the image. Suspecting an error related to hardware, not software. 
+
+Screenshot 2026-06-03 134340: Added a button to advance to the next image. Happy accident - it also updates the name for the dropdown menu. 
+
+Screenshot 2026-06-03 135443: Window starts up at full screen (but leaves display taskbar visible)
+
+Screenshot 2026-06-03 143254: Added an automatic progression button for the images being displayed
+
+Screenshot 2026-06-04 143244: Added a button to advance to the previous image. 
+
+Screenshot 2026-06-04 151009: Started implementing a toolbar + menu (top left). There are 2 buttons currently, but these are intended to connect with the image processing options to come. 
+
+Screenshot 2026-06-05 152502: Implemented a second window, which could be used as a neater way to organize all the settings for image processing (rather than just a ton of menu options). This menu is able to be toggled
+
+Screenshot 2026-06-05 162820: New window has an example slider and DoubleSpinBox (numeric input). These toggle with the option checkbox and are connected to each other in value (slider changes -> spin box value changes, vice versa) 
