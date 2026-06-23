@@ -23,3 +23,19 @@ Screenshot 2026-06-04 151009: Started implementing a toolbar + menu (top left). 
 Screenshot 2026-06-05 152502: Implemented a second window, which could be used as a neater way to organize all the settings for image processing (rather than just a ton of menu options). This menu is able to be toggled
 
 Screenshot 2026-06-05 162820: New window has an example slider and DoubleSpinBox (numeric input). These toggle with the option checkbox and are connected to each other in value (slider changes -> spin box value changes, vice versa) 
+
+Screenshot 2026-06-15 165959: Beginning to update the GUI to change between a camera or the KVASIR folder
+
+Screenshot 2026-06-15 170645: Successfully integrated a real time camera into the GUI. Able to switch between the KVASIR files and camera with ease. 
+
+Screenshot 2026-06-15 174319: Added a pause button for the camera feed. It can capture a moment of real time input, then when the button is released resume real time display.
+
+Screenshot 2026-06-17 130316: After dealing with bugs, managed to move the high pass filter for the camera to be in the image processing menu, not as a button on the camera widget. Not functional for folder images yet. 
+
+Screenshot 2026-06-17 133437: Made the HPF functional with the folder images. Also implemented a timer, like in the camera widget, to update the images without needing to push other buttons.
+
+Screenshot 2026-06-22 182351: Incorporated a new button and related settings for CLAHE. Not functional yet, but lots of code had to be modified to even show the GUI again. 
+
+Screenshot 2026-06-23 125451: The CLAHE code is functional and there is a noticeable difference between non CLAHE and CLAHE 
+
+Screenshot 2026-06-23 130947: A non-obvious bug for the CLAHE code was fixed. Now the images appropriately conduct CLAHE with the various setting options.
