@@ -39,3 +39,33 @@ Screenshot 2026-06-22 182351: Incorporated a new button and related settings for
 Screenshot 2026-06-23 125451: The CLAHE code is functional and there is a noticeable difference between non CLAHE and CLAHE 
 
 Screenshot 2026-06-23 130947: A non-obvious bug for the CLAHE code was fixed. Now the images appropriately conduct CLAHE with the various setting options.
+
+Screenshot 2026-06-24 132700: Incorporated a slider to make the HPF adjustable, including displaying the intensity value for the filter. 
+
+Screenshot 2026-06-24 143915: Made an image processing function to modify the RGB channel gains for the image. 
+
+Screenshot 2026-06-24 162828: Made an image processing function to select various thresholding methods, plus selecting the threshold value (Note: Otsu's Method overrides the threshold value)
+
+Screenshot 2026-07-01 142133: Incorporated OpenCV's fastNlMeansDenoisingColored() function as a setting for denoising. Included the ability to modify the key variables (luminance, color, template patch size, and search window size) for users. 
+
+Screenshot 2026-07-14 204536: Successfully displayed TXI-inspired images for the first time
+
+Screenshot 2026-07-14 205116: Accidentally overcompensated with the red axis adjustment during fine-tuning of the TXI setting
+
+Screenshot 2026-07-14 205456: Fixed the red axis overcompensation. Currently at a satisfied state for the TXI settings, pre user settings and quantitative testing procedures. 
+
+Screenshot 2026-07-21 135521: Implemented PyQtDarkTheme. Modified the GUI to begin as "light mode" in default. 
+
+Screenshot 2026-07-21 142228: Updated the GUI to include a new symbol for toggling dark mode
+
+Screenshot 2026-07-21 150417: Fixed the Light Mode GUI for text to show properly
+
+Screenshot 2026-07-21 153718: Incorporated borders in the GUI. Currently, the borders surround every item in the GUI (besides the Folder/Camera options and the menus). 
+
+Screenshot 2026-07-21 160639 and 160704: Incorporated additional color for button borders, button presses, and button hovering
+
+Screenshot 2026-07-29 131127 and 131207: Incorporated the TXI settings 
+
+Screenshot 2026-08-09 all: Final layout. Included the save image option with metadata, reorganized the image processing setting window, buttons, and finalized the color scheme.  
+
+Screenshot 2026-08-13 all: Minor edit to the final layout - incorporated the Otsu's Method threshold value as a displayed element of the settings window. 
