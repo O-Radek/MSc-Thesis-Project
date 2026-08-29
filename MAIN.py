@@ -1,11 +1,20 @@
 from PySide6.QtWidgets import QApplication
 from GUI_WORK import MainWindow
 
-app = QApplication([])
-window = MainWindow()
+def main():
+    app = QApplication([])
 
-screen_geometry = QApplication.primaryScreen().availableGeometry() # get the available geometry of the primary screen
-window.resize(screen_geometry.width(), screen_geometry.height())
+    window = MainWindow(app)
 
-window.show()
-app.exec()
+    # Resize the application to fill the available screen.
+    screen_geometry = QApplication.primaryScreen().availableGeometry()
+    window.resize(
+        screen_geometry.width(),
+        screen_geometry.height()
+    )
+
+    window.show()
+    app.exec()
+
+if __name__ == "__main__":
+    main()
